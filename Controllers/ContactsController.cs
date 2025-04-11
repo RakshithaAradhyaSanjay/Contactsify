@@ -24,17 +24,17 @@ namespace ContactsApp.Controllers
             return Ok(contacts);
         }
         [HttpPost]
-        public IActionResult AddContact(AddContactRequestDto request)
+        public IActionResult AddContact(List<AddContactRequestDto> request)
         {
-            var domainModelContact = new Contact
+            var domainModelContact = request.Select(request => new Contact
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Email = request.Email,
                 Phone = request.Phone,
                 Favorite = request.Favorite
-            };
-            dbContext.Contacts.Add(domainModelContact);
+            });
+            dbContext.Contacts.AddRange(domainModelContact);
            dbContext.SaveChanges();
             return Ok(domainModelContact);
         }
